@@ -113,5 +113,7 @@ HLS (HTTP Live Streaming)
 ## 👤 Contributors
 - [Lakshmi Ganapathi Kodi](https://github.com/ganapathi1578)
 - [Dhanush Reddy](https://github.com/dhanush0706)
+- [Jayanth Reddy](https://github.com/jayanth-yjr)
+- [Rahul Reddy](https://github.com/RahulAbhiram)
 
 Created as part of an IIT Tirupati Internship project.
