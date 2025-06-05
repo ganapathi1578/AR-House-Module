@@ -15,83 +15,22 @@ AR-House-Module is a Django + OpenCV-based real-time camera action recognition s
 ---
 
 ## 📁 Project Structure
-AR-House-Module/
+
+```plaintext
 AR-House-Module/
 ├── Pipfile
 ├── Pipfile.lock
 ├── db.sqlite3
 ├── manage.py
-├── nginx/
-│   ├── conf/
-│   │   ├── fastcgi.conf
-│   │   ├── fastcgi_params
-│   │   ├── koi-utf
-│   │   ├── koi-win
-│   │   ├── mime.types
-│   │   ├── nginx.conf
-│   │   ├── scgi_params
-│   │   ├── uwsgi_params
-│   │   └── win-utf
-│   ├── contrib/
-│   │   ├── README
-│   │   ├── geo2nginx.pl
-│   │   └── unicode2nginx/
-│   │       ├── koi-utf
-│   │       ├── unicode-to-nginx.pl
-│   │       └── win-utf
-│   │   └── vim/
-│   │       ├── ftdetect/nginx.vim
-│   │       ├── ftplugin/nginx.vim
-│   │       ├── indent/nginx.vim
-│   │       └── syntax/nginx.vim
-│   ├── docs/
-│   │   ├── CHANGES
-│   │   ├── CHANGES.ru
-│   │   ├── CODE_OF_CONDUCT.md
-│   │   ├── CONTRIBUTING.md
-│   │   ├── LICENSE
-│   │   ├── OpenSSL.LICENSE
-│   │   ├── PCRE.LICENCE
-│   │   ├── README.md
-│   │   ├── SECURITY.md
-│   │   └── zlib.LICENSE
-│   ├── html/
-│   │   ├── 50x.html
-│   │   └── index.html
-│   ├── logs/
-│   │   ├── access.log
-│   │   ├── error.log
-│   │   └── nginx.pid
-│   ├── nginx.exe
-│   └── temp/
-│       ├── client_body_temp
-│       ├── fastcgi_temp
-│       ├── proxy_temp
-│       ├── scgi_temp
-│       └── uwsgi_temp
 ├── streams/
 │   ├── __init__.py
-│   ├── __pycache__/
-│   │   ├── __init__.cpython-312.pyc
-│   │   ├── admin.cpython-312.pyc
-│   │   ├── apps.cpython-312.pyc
-│   │   ├── constants.cpython-312.pyc
-│   │   ├── models.cpython-312.pyc
-│   │   ├── urls.cpython-312.pyc
-│   │   └── views.cpython-312.pyc
 │   ├── admin.py
 │   ├── apps.py
 │   ├── constants.py
 │   ├── management/
 │   │   └── commands/
-│   │       ├── __pycache__/
-│   │       │   ├── ml_pipeline.cpython-312.pyc
-│   │       │   └── nginx_server.cpython-312.pyc
 │   │       ├── ml_pipeline.py
 │   │       └── nginx_server.py
-│   ├── migrations/
-│   │   ├── __init__.py
-│   │   └── __pycache__/__init__.cpython-312.pyc
 │   ├── models.py
 │   ├── tests.py
 │   ├── urls.py
@@ -100,15 +39,11 @@ AR-House-Module/
 │   └── testing_boundingboxes.html
 └── video_streaming/
     ├── __init__.py
-    ├── __pycache__/
-    │   ├── __init__.cpython-312.pyc
-    │   ├── settings.cpython-312.pyc
-    │   ├── urls.cpython-312.pyc
-    │   └── wsgi.cpython-312.pyc
     ├── asgi.py
     ├── settings.py
     ├── urls.py
     └── wsgi.py
+```
 
 
 ---
