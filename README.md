@@ -110,5 +110,10 @@ HTML/CSS Templates
 
 HLS (HTTP Live Streaming)
 
-### 👤 Author
-Created by Lakshmi Ganapathi Kodi as part of an IIT Internship project.
+### 👤 Authors
+## Contributors
+
+<a href="https://github.com/ganapathikodi">
+  <img src="https://github.com/ganapathikodi.png" width="100" alt="ganapathikodi"/>
+</a>
+Created as part of an IIT Tirupati Internship project.
