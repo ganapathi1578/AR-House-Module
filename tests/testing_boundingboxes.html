@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Seekable Live Stream with Bounding Boxes</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    #videoWrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1280px;
+      margin: auto;
+    }
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="videoWrapper">
+  <video id="video" controls muted playsinline></video>
+  <canvas id="overlay"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('overlay');
+  const ctx = canvas.getContext('2d');
+
+  const videoUrl = 'http://10.23.89.245:12345/media/2025-06-05/cam1/index.m3u8';
+  const jsonBaseUrl = 'http://10.23.89.245:12345/media/2025-06-05/cam1/';
+
+  // Duration (seconds) of each segment
+  const segmentDuration = 2;
+
+  // Setup HLS video playback
+  function setupVideo() {
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(videoUrl);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play();
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = videoUrl;
+      video.play();
+    }
+  }
+
+  // Resize canvas to match video dimensions
+  function resizeCanvas() {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+  }
+
+  video.addEventListener('loadeddata', resizeCanvas);
+  window.addEventListener('resize', resizeCanvas);
+
+  // Get segment index from current video time
+  function getSegmentIndexFromTime(timeInSeconds) {
+    return Math.floor(timeInSeconds / segmentDuration);
+  }
+
+  // Fetch JSON metadata and draw bounding boxes
+  async function fetchAndDraw() {
+    const segmentIndex = getSegmentIndexFromTime(video.currentTime);
+    const jsonUrl = `${jsonBaseUrl}segment_${String(segmentIndex).padStart(5, '0')}.json`;
+
+    try {
+      const res = await fetch(jsonUrl);
+      if (!res.ok) throw new Error("No segment yet");
+      const metadata = await res.json();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'lime';
+      ctx.lineWidth = 2;
+      ctx.font = '16px Arial';
+      ctx.fillStyle = 'lime';
+
+      for (const obj of metadata) {
+        const { xmin, ymin, xmax, ymax, label } = obj;
+        ctx.strokeRect(xmin, ymin, xmax - xmin, ymax - ymin);
+        ctx.fillText(label, xmin + 4, ymin - 6);
+      }
+    } catch (err) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear when no data
+      // console.log('No metadata for segment:', segmentIndex);
+    }
+  }
+
+  setupVideo();
+
+  // Poll every 500ms to update bounding boxes synced with video time
+  setInterval(fetchAndDraw, 500);
+</script>
+
+</body>
+</html>
