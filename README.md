@@ -113,6 +113,8 @@ HLS (HTTP Live Streaming)
 ### 👤 Authors
 ## Contributors
 
+- [@ganapathikodi](https://github.com/ganapathikodi)
+- [@octocat](https://github.com/octocat)
 <a href="https://github.com/ganapathikodi">
   <img src="https://github.com/ganapathikodi.png" width="100" alt="ganapathikodi"/>
 </a>
