@@ -16,13 +16,13 @@ AR-House-Module is a Django + OpenCV-based real-time camera action recognition s
 
 ## 📁 Project Structure
 AR-House-Module/
-.
+AR-House-Module/
 ├── Pipfile
 ├── Pipfile.lock
 ├── db.sqlite3
 ├── manage.py
-├── nginx
-│   ├── conf
+├── nginx/
+│   ├── conf/
 │   │   ├── fastcgi.conf
 │   │   ├── fastcgi_params
 │   │   ├── koi-utf
@@ -32,23 +32,19 @@ AR-House-Module/
 │   │   ├── scgi_params
 │   │   ├── uwsgi_params
 │   │   └── win-utf
-│   ├── contrib
+│   ├── contrib/
 │   │   ├── README
 │   │   ├── geo2nginx.pl
-│   │   ├── unicode2nginx
-│   │   │   ├── koi-utf
-│   │   │   ├── unicode-to-nginx.pl
-│   │   │   └── win-utf
-│   │   └── vim
-│   │       ├── ftdetect
-│   │       │   └── nginx.vim
-│   │       ├── ftplugin
-│   │       │   └── nginx.vim
-│   │       ├── indent
-│   │       │   └── nginx.vim
-│   │       └── syntax
-│   │           └── nginx.vim
-│   ├── docs
+│   │   └── unicode2nginx/
+│   │       ├── koi-utf
+│   │       ├── unicode-to-nginx.pl
+│   │       └── win-utf
+│   │   └── vim/
+│   │       ├── ftdetect/nginx.vim
+│   │       ├── ftplugin/nginx.vim
+│   │       ├── indent/nginx.vim
+│   │       └── syntax/nginx.vim
+│   ├── docs/
 │   │   ├── CHANGES
 │   │   ├── CHANGES.ru
 │   │   ├── CODE_OF_CONDUCT.md
@@ -59,23 +55,23 @@ AR-House-Module/
 │   │   ├── README.md
 │   │   ├── SECURITY.md
 │   │   └── zlib.LICENSE
-│   ├── html
+│   ├── html/
 │   │   ├── 50x.html
 │   │   └── index.html
-│   ├── logs
+│   ├── logs/
 │   │   ├── access.log
 │   │   ├── error.log
 │   │   └── nginx.pid
 │   ├── nginx.exe
-│   └── temp
+│   └── temp/
 │       ├── client_body_temp
 │       ├── fastcgi_temp
 │       ├── proxy_temp
 │       ├── scgi_temp
 │       └── uwsgi_temp
-├── streams
+├── streams/
 │   ├── __init__.py
-│   ├── __pycache__
+│   ├── __pycache__/
 │   │   ├── __init__.cpython-312.pyc
 │   │   ├── admin.cpython-312.pyc
 │   │   ├── apps.cpython-312.pyc
@@ -86,26 +82,25 @@ AR-House-Module/
 │   ├── admin.py
 │   ├── apps.py
 │   ├── constants.py
-│   ├── management
-│   │   └── commands
-│   │       ├── __pycache__
+│   ├── management/
+│   │   └── commands/
+│   │       ├── __pycache__/
 │   │       │   ├── ml_pipeline.cpython-312.pyc
 │   │       │   └── nginx_server.cpython-312.pyc
 │   │       ├── ml_pipeline.py
 │   │       └── nginx_server.py
-│   ├── migrations
+│   ├── migrations/
 │   │   ├── __init__.py
-│   │   └── __pycache__
-│   │       └── __init__.cpython-312.pyc
+│   │   └── __pycache__/__init__.cpython-312.pyc
 │   ├── models.py
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
-├── tests
+├── tests/
 │   └── testing_boundingboxes.html
-└── video_streaming
+└── video_streaming/
     ├── __init__.py
-    ├── __pycache__
+    ├── __pycache__/
     │   ├── __init__.cpython-312.pyc
     │   ├── settings.cpython-312.pyc
     │   ├── urls.cpython-312.pyc
