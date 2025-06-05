@@ -16,14 +16,35 @@ AR-House-Module is a Django + OpenCV-based real-time camera action recognition s
 
 ## 📁 Project Structure
 AR-House-Module/
-├── nginx/ # Nginx config and binaries
-├── streams/ # Django app for cameras, video segments, APIs
-├── video_streaming/ # Django project settings
-├── media/ # Video frames and HLS segments
-├── tests/ # Test cases
-├── db.sqlite3 # Default SQLite DB
-├── manage.py # Django CLI
-├── Pipfile / Pipfile.lock # Dependencies
+|-- Pipfile
+`-- videostream
+    |-- db.sqlite3
+    |-- manage.py
+    |-- streamapp
+    |   |-- __init__.py
+    |   |-- __pycache__
+    |   |   |-- __init__.cpython-312.pyc
+    |   |   |-- urls.cpython-312.pyc
+    |   |   `-- views.cpython-312.pyc
+    |   |-- admin.py
+    |   |-- apps.py
+    |   |-- migrations
+    |   |   `-- __init__.py
+    |   |-- models.py
+    |   |-- tests.py
+    |   |-- urls.py
+    |   `-- views.py
+    `-- videostream
+        |-- __init__.py
+        |-- __pycache__
+        |   |-- __init__.cpython-312.pyc
+        |   |-- settings.cpython-312.pyc
+        |   |-- urls.cpython-312.pyc
+        |   `-- wsgi.cpython-312.pyc
+        |-- asgi.py
+        |-- settings.py
+        |-- urls.py
+        `-- wsgi.py
 
 
 ---
