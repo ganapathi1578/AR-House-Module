@@ -7,6 +7,9 @@ name = "pypi"
 django = "==3.1"
 opencv-python = "*"
 ultralytics = "*"
+torch = "*"
+torchvision = "*"
+torchaudio = "*"
 
 [dev-packages]
 
