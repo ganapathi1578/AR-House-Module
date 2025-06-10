@@ -116,4 +116,4 @@ HLS (HTTP Live Streaming)
 - [Jayanth Reddy](https://github.com/jayanth-yjr)
 - [Rahul Reddy](https://github.com/RahulAbhiram)
 
-Created as part of an IIT Tirupati Internship project.
+Created as part of an IIT Tirupati Internship project. Under the Guidence of [Dr.Kalidas Yeturu](https://github.com/ykalidasiittp)
