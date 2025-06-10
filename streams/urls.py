@@ -31,4 +31,12 @@ urlpatterns = [
 
     # 6) Full manifest of all dates/cameras
     path('api/streams/manifest/', views.all_streams_manifest, name='all_streams_manifest'),
+
+    path('admin/create-user/', views.create_user),
+    path('get-key/', views.register_or_get_key),
+    path('view-api-key/', views.view_api_key),
+    path('regenerate-api-key/', views.regenerate_api_key),
 ]
+
+
+

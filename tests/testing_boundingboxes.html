@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Seekable Live Stream with Bounding Boxes</title>
@@ -40,11 +40,13 @@
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
 
-  const videoUrl = 'http://10.23.89.245:12345/media/2025-06-05/cam1/index.m3u8';
-  const jsonBaseUrl = 'http://10.23.89.245:12345/media/2025-06-05/cam1/';
-
-  // Duration (seconds) of each segment
-  const segmentDuration = 2;
+  const videoUrl = 'http://10.23.71.78:5090/media/2025-06-10/cam1/index.m3u8';
+  const jsonBaseUrl = 'http://10.23.71.78:5090/media/2025-06-10/cam1/';
+  
+  const segmentDuration = 2; // seconds, should match backend SEGMENT_DURATION
+  let currentSegmentIndex = -1;
+  let currentMetadata = null;
+  let metadataCache = {};
 
   // Setup HLS video playback
   function setupVideo() {
@@ -75,37 +77,65 @@
     return Math.floor(timeInSeconds / segmentDuration);
   }
 
-  // Fetch JSON metadata and draw bounding boxes
-  async function fetchAndDraw() {
-    const segmentIndex = getSegmentIndexFromTime(video.currentTime);
+  // Fetch JSON metadata
+  async function fetchMetadata(segmentIndex) {
+    if (metadataCache[segmentIndex]) {
+      return metadataCache[segmentIndex];
+    }
     const jsonUrl = `${jsonBaseUrl}segment_${String(segmentIndex).padStart(5, '0')}.json`;
-
     try {
       const res = await fetch(jsonUrl);
       if (!res.ok) throw new Error("No segment yet");
       const metadata = await res.json();
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'lime';
-      ctx.lineWidth = 2;
-      ctx.font = '16px Arial';
-      ctx.fillStyle = 'lime';
-
-      for (const obj of metadata) {
-        const { xmin, ymin, xmax, ymax, label } = obj;
-        ctx.strokeRect(xmin, ymin, xmax - xmin, ymax - ymin);
-        ctx.fillText(label, xmin + 4, ymin - 6);
-      }
+      metadataCache[segmentIndex] = metadata;
+      return metadata;
     } catch (err) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear when no data
-      // console.log('No metadata for segment:', segmentIndex);
+      console.log('No metadata for segment:', segmentIndex);
+      return null;
+    }
+  }
+
+  // Draw bounding boxes on the canvas
+  function drawBoundingBoxes(detections) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!detections) return;
+    ctx.strokeStyle = 'lime';
+    ctx.lineWidth = 2;
+    ctx.font = '16px Arial';
+    ctx.fillStyle = 'lime';
+    for (const obj of detections) {
+      const { xmin, ymin, xmax, ymax, label } = obj;
+      ctx.strokeRect(xmin, ymin, xmax - xmin, ymax - ymin);
+      ctx.fillText(label || 'object', xmin + 4, ymin - 6);
+    }
+  }
+
+  // Update bounding boxes based on current video time
+  async function updateBoundingBoxes() {
+    const currentTime = video.currentTime;
+    const segmentIndex = getSegmentIndexFromTime(currentTime);
+    const timeWithinSegment = currentTime % segmentDuration;
+
+    if (segmentIndex !== currentSegmentIndex) {
+      currentSegmentIndex = segmentIndex;
+      currentMetadata = await fetchMetadata(segmentIndex);
+    }
+
+    if (currentMetadata && currentMetadata.length > 0) {
+      const num_frames = currentMetadata.length;
+      const frame_index = Math.min(
+        Math.max(0, Math.round((timeWithinSegment / segmentDuration) * num_frames)),
+        num_frames - 1
+      );
+      const detections = currentMetadata[frame_index].detections;
+      drawBoundingBoxes(detections);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   }
 
   setupVideo();
-
-  // Poll every 500ms to update bounding boxes synced with video time
-  setInterval(fetchAndDraw, 500);
+  video.addEventListener('timeupdate', updateBoundingBoxes);
 </script>
 
 </body>
