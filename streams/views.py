@@ -1,6 +1,7 @@
 # streams/views.py
 
 import os
+from pathlib import Path
 import json
 import datetime
 from django.conf import settings
@@ -11,10 +12,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import hashers, authenticate
 import secrets
-from .models import APIKey
+from .models import APIKey,  Feedback
 from django.views.decorators.csrf import csrf_exempt
 from .decorators import require_api_key
 from django.views.decorators.http import require_POST
+import uuid
+import subprocess
+import requests
 
 
 
@@ -278,3 +282,104 @@ def regenerate_api_key(request):
                 'created_at': api_key_obj.created_at.isoformat()})
         except APIKey.DoesNotExist:
             return JsonResponse({'error': 'API key not found'}, status=404)
+
+
+@require_api_key
+@csrf_exempt
+def handle_feedback(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST only'}, status=405)
+
+    try:
+        data = request.POST
+        start_time = data['start_time']
+        end_time = data['end_time']
+        user_id = data['user_id']
+        feedback_text = data['feedback_text']
+        video_url = data['video_url']
+
+        # Validate time format (HH:MM:SS)
+        def validate_time_format(t):
+            try:
+                h, m, s = map(int, t.split(':'))
+                if not (0 <= h <= 23 and 0 <= m <= 59 and 0 <= s <= 59):
+                    raise ValueError
+                return True
+            except ValueError:
+                return False
+
+        if not (validate_time_format(start_time) and validate_time_format(end_time)):
+            return JsonResponse({'error': 'Invalid time format'}, status=400)
+
+        # Generate full UUID for uniqueness
+        unique_id = str(uuid.uuid4())
+
+        # Define output path in root/feedbackvideos
+        output_filename = f"{unique_id}.mp4"
+        FEEDBACK_VIDEO_DIR = Path(settings.BASE_DIR) / 'feedbackvideos'
+        output_path = FEEDBACK_VIDEO_DIR / output_filename
+
+        # Ensure folder exists
+        FEEDBACK_VIDEO_DIR.mkdir(parents=True, exist_ok=True)
+
+        # Calculate duration from start and end times
+        def time_to_seconds(t):  # "HH:MM:SS" → seconds
+            h, m, s = map(int, t.split(':'))
+            return h * 3600 + m * 60 + s
+
+        duration = time_to_seconds(end_time) - time_to_seconds(start_time)
+        if duration <= 0:
+            return JsonResponse({'error': 'End time must be after start time'}, status=400)
+
+        # FFmpeg command to trim video
+        cmd = [
+            'ffmpeg',
+            '-ss', start_time,
+            '-i', video_url,
+            '-t', str(duration),
+            '-c:v', 'libx264',
+            '-c:a', 'aac',
+            '-strict', '-2',
+            str(output_path),
+            '-y'
+        ]
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if result.returncode != 0:
+            return JsonResponse({'error': 'Video processing failed'}, status=500)
+
+        # Save to SQLite model
+        feedback = Feedback.objects.create(
+            unique_id=unique_id,
+            user_id=user_id,
+            feedback_text=feedback_text,
+            video_url=video_url,
+            trimmed_video=f"feedbackvideos/{output_filename}",
+            start_time=start_time,
+            end_time=end_time
+        )
+
+        # Send to central server
+        """try:
+            with open(output_path, 'rb') as f:
+                response = requests.post(
+                    'http://central.server.domain/api/upload/',
+                    data={
+                        'user_id': user_id,
+                        'feedback_text': feedback_text,
+                        'start_time': start_time,
+                        'end_time': end_time,
+                        'unique_id': unique_id,
+                    },
+                    files={'video': (output_filename, f, 'video/mp4')}
+                )
+                if response.status_code != 200:
+                    return JsonResponse({'error': f'Failed to upload to central server: {response.text}'}, status=500)
+        except Exception as e:
+            return JsonResponse({'error': f'Error sending to central server: {str(e)}'}, status=500)
+
+        return JsonResponse({'status': 'success', 'id': unique_id})"""
+
+    except KeyError:
+        return JsonResponse({'error': 'Missing required fields'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': f'Server error: {str(e)}'}, status=500)
