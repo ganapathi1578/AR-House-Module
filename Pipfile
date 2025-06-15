@@ -10,6 +10,8 @@ ultralytics = "*"
 torch = "*"
 torchvision = "*"
 torchaudio = "*"
+aiohttp = "*"
+websockets = "*"
 
 [dev-packages]
 

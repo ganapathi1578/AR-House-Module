@@ -1,0 +1,1 @@
+[{"ts": 1749555092.2705317, "detections": []}, {"ts": 1749555092.611858, "detections": []}, {"ts": 1749555092.9530814, "detections": [{"label": "person", "confidence": 0.2676193416118622, "xmin": 602, "ymin": 276, "xmax": 638, "ymax": 418}]}, {"ts": 1749555093.29786, "detections": []}]

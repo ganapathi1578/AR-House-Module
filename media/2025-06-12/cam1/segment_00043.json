@@ -1,0 +1,1 @@
+[{"ts": 1749555097.7473493, "detections": [{"label": "chair", "confidence": 0.3664184808731079, "xmin": 600, "ymin": 291, "xmax": 638, "ymax": 420}]}, {"ts": 1749555098.0936115, "detections": []}, {"ts": 1749555098.4402056, "detections": []}, {"ts": 1749555098.786909, "detections": []}]
